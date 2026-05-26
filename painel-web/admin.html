@@ -223,6 +223,10 @@
           <div class="item-top">
             <div><div class="name">${escapeHtml(p.name || uid)}</div><div class="small">${escapeHtml(p.vehiclePlate || '')} ${escapeHtml(p.phone || '')}</div></div>
             <span class="badge ${online?'b-ok':'b-danger'}">${online?'ONLINE':'OFFLINE'}</span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto">
+              <button class="gray" style="padding:6px 10px;border-radius:10px;font-size:12px" onclick="editDriver('${uid}')">Editar</button>
+              <button class="danger" style="padding:6px 10px;border-radius:10px;font-size:12px" onclick="deleteDriver('${uid}')">Excluir</button>
+            </div>
           </div>
           <div class="small mt">
             Último GPS: ${loc.updatedAt ? timeAgo(loc.updatedAt) : 'nunca'}<br>
@@ -232,6 +236,32 @@
           </div>
         </div>`;
       }).join('');
+    }
+
+    // Editar/excluir motoboy
+    function editDriver(uid){
+      const d = (state.drivers||{})[uid] || {};
+      const p = d.profile || {};
+      $('driverUid').value = uid;
+      $('driverName').value = p.name || '';
+      $('driverPhone').value = p.phone || '';
+      $('driverPlate').value = p.vehiclePlate || '';
+      $('driverUid').scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    async function deleteDriver(uid){
+      if(!uid) return;
+      const d = (state.drivers||{})[uid] || {};
+      const p = d.profile || {};
+      const label = (p.name ? p.name + ' ('+uid+')' : uid);
+      if(!confirm('Excluir motoboy '+label+'?\n\nIsso remove o cadastro do banco e bloqueia o envio de GPS deste UID.')) return;
+      try{
+        await db.ref(`${basePath}/drivers/${uid}`).remove();
+        alert('Motoboy excluído.');
+      }catch(e){
+        console.error(e);
+        alert('Falha ao excluir. Verifique se você está logado como admin.');
+      }
     }
 
     function renderDeliveries(){
