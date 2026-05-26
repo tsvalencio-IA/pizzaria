@@ -1,0 +1,45 @@
+{
+  "deliveryApp": {
+    "pizzaria_modelo": {
+      "config": {
+        "nomePizzaria": "Pizzaria Modelo",
+        "promessaNormalMin": 30,
+        "alertaSemMotoboyMin": 20,
+        "promessaEstendidaMin": 40,
+        "assinatura": "Powered by thIAguinho Soluções Digitais"
+      },
+      "roles": {
+        "COLE_AQUI_O_UID_DO_GESTOR": "admin"
+      },
+      "drivers": {
+        "COLE_AQUI_O_UID_DO_MOTOBOY_1": {
+          "profile": {
+            "name": "Motoboy 1",
+            "phone": "",
+            "vehiclePlate": "",
+            "active": true
+          }
+        },
+        "COLE_AQUI_O_UID_DO_MOTOBOY_2": {
+          "profile": {
+            "name": "Motoboy 2",
+            "phone": "",
+            "vehiclePlate": "",
+            "active": true
+          }
+        }
+      },
+      "deliveries": {
+        "pedido_modelo": {
+          "code": "0001",
+          "customer": "Cliente Exemplo",
+          "address": "Endereço de exemplo",
+          "status": "aguardando",
+          "createdAt": 1770000000000,
+          "promisedNormalAt": 1770001800000,
+          "promisedExtendedAt": 1770002400000
+        }
+      }
+    }
+  }
+}

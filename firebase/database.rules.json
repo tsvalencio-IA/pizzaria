@@ -1,0 +1,41 @@
+{
+  "rules": {
+    "deliveryApp": {
+      "$empresaId": {
+        ".read": "auth != null && root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin'",
+        ".write": "auth != null && root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin'",
+
+        "drivers": {
+          "$driverUid": {
+            ".read": "auth != null && (root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin' || auth.uid === $driverUid)",
+
+            "location": {
+              ".write": "auth != null && auth.uid === $driverUid && root.child('deliveryApp').child($empresaId).child('drivers').child(auth.uid).child('profile').child('active').val() === true",
+              ".validate": "newData.hasChildren(['lat','lng','updatedAt']) && newData.child('lat').isNumber() && newData.child('lng').isNumber() && newData.child('lat').val() >= -90 && newData.child('lat').val() <= 90 && newData.child('lng').val() >= -180 && newData.child('lng').val() <= 180 && newData.child('updatedAt').isNumber()"
+            },
+            "status": {
+              ".write": "auth != null && auth.uid === $driverUid && root.child('deliveryApp').child($empresaId).child('drivers').child(auth.uid).child('profile').child('active').val() === true"
+            },
+            "profile": {
+              ".write": "auth != null && root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin'"
+            }
+          }
+        },
+
+        "deliveries": {
+          "$deliveryId": {
+            ".read": "auth != null && root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin'",
+            ".write": "auth != null && root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin'"
+          }
+        },
+
+        "roles": {
+          "$uid": {
+            ".read": "auth != null && root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin'",
+            ".write": "auth != null && root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin'"
+          }
+        }
+      }
+    }
+  }
+}
