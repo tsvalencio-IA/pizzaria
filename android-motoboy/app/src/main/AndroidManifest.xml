@@ -30,6 +30,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".DeliveriesActivity" android:exported="false" />
+
         <service
             android:name=".TrackingService"
             android:enabled="true"
