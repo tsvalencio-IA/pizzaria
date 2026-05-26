@@ -4,64 +4,47 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Painel Pizzaria GPS</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
   <style>
     :root{
-      --bg:#0b1220; --card:#0f1a2f; --line:#1e2a44; --txt:#e5e7eb; --muted:#9ca3af;
-      --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444; --blue:#60a5fa;
-      --radius:14px;
+      --bg:#0f172a;--card:#111827;--card2:#1f2937;--text:#f9fafb;--muted:#9ca3af;
+      --ok:#16a34a;--warn:#f59e0b;--danger:#dc2626;--blue:#2563eb;--line:#374151;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--txt)}
-    header{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;gap:14px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
-    header h1{margin:0;font-size:18px;font-weight:900}
-    header p{margin:6px 0 0;color:var(--muted);font-size:12px}
-    .wrap{display:grid;grid-template-columns:420px 1fr;min-height:calc(100vh - 70px)}
-    aside{border-right:1px solid var(--line);padding:14px;display:grid;gap:12px;overflow:auto}
-    main{position:relative}
-    #map{height:calc(100vh - 70px)}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    label{display:block;font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-    input,select,textarea{
-      width:100%;padding:10px;border-radius:12px;border:1px solid var(--line);
-      background:#0b1630;color:var(--txt);outline:none;font-weight:700
-    }
-    textarea{min-height:72px;resize:vertical}
-    .btnbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .btn{
-      border:0;border-radius:12px;padding:10px 12px;font-weight:900;cursor:pointer;
-      background:#111827;color:var(--txt);border:1px solid var(--line)
-    }
-    .btn.primary{background:var(--blue);color:#0b1220;border-color:transparent}
-    .btn.ok{background:var(--ok);color:#05210f;border-color:transparent}
-    .btn.bad{background:var(--bad);color:#2b0a0a;border-color:transparent}
-    .btn.ghost{background:transparent}
-    .muted{color:var(--muted);font-size:12px;line-height:1.45}
-    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-    .chip{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:#0b1630;font-size:12px;font-weight:900;color:#cbd5e1}
-    .dot{width:10px;height:10px;border-radius:99px;background:#64748b}
-    .dot.ok{background:var(--ok)}
-    .dot.warn{background:var(--warn)}
-    .dot.bad{background:var(--bad)}
-    .list{display:grid;gap:10px}
-    .item{border:1px solid var(--line);border-radius:14px;padding:10px;background:#0b1630}
-    .item h4{margin:0 0 8px;font-size:13px;font-weight:900}
-    .item .meta{font-size:12px;color:var(--muted);line-height:1.45}
-    .split{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-    .small{font-size:11px;color:var(--muted);font-weight:900}
-    .right{text-align:right}
-    .pill{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900}
-    .pill.ok{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.25)}
-    .pill.warn{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.25)}
-    .pill.bad{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.25)}
-    .sep{height:1px;background:var(--line);margin:10px 0}
-    .footer{padding:10px 18px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text)}
+    .container{display:grid;grid-template-columns:420px 1fr;min-height:100vh}
+    .panel{border-right:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:12px;overflow:auto}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+    .card h2{margin:0 0 6px;font-size:14px}
+    .small{font-size:12px;color:var(--muted);line-height:1.4}
+    input,select,textarea{width:100%;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);outline:none;font-weight:700}
+    textarea{min-height:84px;resize:vertical}
+    button{padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:var(--text);font-weight:900;cursor:pointer}
+    button:hover{filter:brightness(1.08)}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .row > *{flex:1}
+    .ok{background:rgba(22,163,74,.15);border-color:rgba(22,163,74,.35);color:#86efac}
+    .warn{background:rgba(245,158,11,.15);border-color:rgba(245,158,11,.35);color:#fcd34d}
+    .danger{background:rgba(220,38,38,.15);border-color:rgba(220,38,38,.35);color:#fca5a5}
+    .blue{background:rgba(37,99,235,.18);border-color:rgba(37,99,235,.35);color:#bfdbfe}
+    .gray{background:rgba(148,163,184,.12);border-color:rgba(148,163,184,.25);color:#e5e7eb}
     .hidden{display:none}
+    #map{height:100vh}
+    .list{display:grid;gap:10px}
+    .item{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:10px}
+    .item h3{margin:0 0 6px;font-size:13px}
+    .meta{font-size:12px;color:var(--muted);line-height:1.45}
+    .tag{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;border:1px solid var(--line);background:rgba(148,163,184,.08);color:#e5e7eb}
+    .tag.ok{border-color:rgba(22,163,74,.35);background:rgba(22,163,74,.15);color:#86efac}
+    .tag.warn{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.15);color:#fcd34d}
+    .tag.danger{border-color:rgba(220,38,38,.35);background:rgba(220,38,38,.15);color:#fca5a5}
+    .section{display:grid;gap:10px}
+    .hr{height:1px;background:var(--line);margin:8px 0}
+    footer{margin-top:auto;color:var(--muted);font-size:12px;padding:8px 2px}
     @media(max-width:980px){
-      .wrap{grid-template-columns:1fr}
-      aside{border-right:0;border-bottom:1px solid var(--line)}
+      .container{grid-template-columns:1fr}
       #map{height:55vh}
+      .panel{border-right:0;border-bottom:1px solid var(--line)}
     }
   </style>
 
@@ -71,139 +54,124 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <!-- Leaflet -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
-  <!-- Config do seu projeto Firebase / empresa -->
-  <script src="./assets/js/firebase-config.js"></script>
+  <!-- Config Firebase / empresa -->
+  <script src="assets/js/firebase-config.js"></script>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1 id="titulo">Painel Pizzaria GPS</h1>
-    <p id="subtitulo" class="muted">Carregando…</p>
-  </div>
-  <div class="chips">
-    <span class="chip"><span class="dot" id="dotAuth"></span>Auth</span>
-    <span class="chip"><span class="dot" id="dotDB"></span>DB</span>
-    <span class="chip"><span class="dot" id="dotDrivers"></span>Motoboys</span>
-  </div>
-</header>
-
-<div class="wrap">
-  <aside>
+<div class="container">
+  <div class="panel">
+    <div class="card">
+      <h2 id="titulo">Pizzaria GPS</h2>
+      <p class="small" id="subtitulo">Monitoramento em tempo real</p>
+      <div class="row" style="margin-top:10px">
+        <span class="tag" id="tagAuth">Auth</span>
+        <span class="tag" id="tagDB">DB</span>
+        <span class="tag" id="tagDrivers">Motoboys</span>
+      </div>
+    </div>
 
     <div class="card" id="loginBox">
-      <div class="split">
-        <div>
-          <b style="font-size:14px">Login do Admin</b>
-          <div class="small">Use o e-mail/senha do Firebase Auth</div>
-        </div>
-        <span class="pill warn" id="pillSession">deslogado</span>
+      <h2>Login do Admin</h2>
+      <p class="small">Use e-mail e senha criados no Firebase Auth.</p>
+      <div class="section">
+        <input id="loginEmail" type="email" placeholder="E-mail do gestor" />
+        <input id="loginPass" type="password" placeholder="Senha" />
+        <button id="btnLogin">Entrar</button>
+        <div id="loginMsg" class="small"></div>
       </div>
-
-      <div class="sep"></div>
-
-      <div class="row">
-        <div>
-          <label>E-mail</label>
-          <input id="loginEmail" type="email" placeholder="admin@pizzaria.com" />
-        </div>
-        <div>
-          <label>Senha</label>
-          <input id="loginPass" type="password" placeholder="••••••••" />
-        </div>
-      </div>
-
-      <div class="btnbar">
-        <button class="btn primary" id="btnLogin">Entrar</button>
-        <button class="btn ghost" id="btnLogout">Sair</button>
-        <button class="btn" id="btnRefresh">Atualizar</button>
-      </div>
-
-      <div class="muted" id="loginMsg" style="margin-top:8px"></div>
     </div>
 
-    <div class="card">
-      <div class="split">
-        <b>Motoboys (drivers)</b>
-        <span class="small" id="driversCount">0</span>
+    <div id="app" class="hidden">
+      <header class="card">
+        <div class="row">
+          <button class="gray" id="btnRefresh">Atualizar</button>
+          <button class="danger" id="btnLogout">Sair</button>
+        </div>
+        <div class="small" id="sessionMsg" style="margin-top:8px"></div>
+      </header>
+
+      <div class="card">
+        <div class="row" style="align-items:center">
+          <h2 style="margin:0">Motoboys</h2>
+          <div class="right small" id="driversCount" style="text-align:right">0</div>
+        </div>
+        <div class="small">Clique para centralizar no mapa. Mostra último GPS e status.</div>
+        <div class="hr"></div>
+        <div class="list" id="driversList"></div>
       </div>
-      <div class="muted">Mostra posição em tempo real. Clique no motoboy para centralizar.</div>
-      <div class="sep"></div>
-      <div class="list" id="driversList"></div>
+
+      <div class="card">
+        <div class="row" style="align-items:center">
+          <h2 style="margin:0">Pedidos / Entregas</h2>
+          <div class="right small" id="deliveriesCount" style="text-align:right">0</div>
+        </div>
+        <div class="small">Cadastre pedidos e atribua motoboy (rota). Motoboy marca entregue no app.</div>
+        <div class="hr"></div>
+
+        <div class="section">
+          <div class="row">
+            <div>
+              <div class="small">ID do pedido</div>
+              <input id="delId" placeholder="ex: 1024" />
+            </div>
+            <div>
+              <div class="small">Tempo prometido (min)</div>
+              <input id="delEta" type="number" min="1" placeholder="ex: 30" />
+            </div>
+          </div>
+
+          <div>
+            <div class="small">Endereço (ou referência)</div>
+            <input id="delAddress" placeholder="Rua X, 123 - Bairro" />
+          </div>
+
+          <div class="row">
+            <div>
+              <div class="small">Lat</div>
+              <input id="delLat" placeholder="-23.55" />
+            </div>
+            <div>
+              <div class="small">Lng</div>
+              <input id="delLng" placeholder="-46.63" />
+            </div>
+          </div>
+
+          <div>
+            <div class="small">Atribuir para (UID motoboy)</div>
+            <input id="delDriverUid" placeholder="UID do motoboy" />
+          </div>
+
+          <div class="row">
+            <button class="ok" id="btnSaveDelivery">Salvar/Atualizar</button>
+            <button class="blue" id="btnAssignDelivery">Enviar rota</button>
+            <button class="danger" id="btnMarkDelivered">Marcar entregue</button>
+          </div>
+
+          <div class="small" id="deliveryMsg"></div>
+        </div>
+
+        <div class="hr"></div>
+        <div class="list" id="deliveriesList"></div>
+      </div>
+
+      <footer id="footer">Powered by thIAguinho Soluções Digitais</footer>
     </div>
+  </div>
 
-    <div class="card">
-      <div class="split">
-        <b>Pedidos / Entregas</b>
-        <span class="small" id="deliveriesCount">0</span>
-      </div>
-      <div class="muted">Cadastre pedidos e atribua motoboy (rota). Motoboy marca entregue no app.</div>
-      <div class="sep"></div>
-
-      <div class="row">
-        <div>
-          <label>ID do pedido</label>
-          <input id="delId" placeholder="ex: 1024" />
-        </div>
-        <div>
-          <label>Tempo prometido (min)</label>
-          <input id="delEta" type="number" min="1" placeholder="ex: 30" />
-        </div>
-      </div>
-
-      <div style="margin-top:10px">
-        <label>Endereço (ou referência)</label>
-        <input id="delAddress" placeholder="Rua X, 123 - Bairro" />
-      </div>
-
-      <div class="row" style="margin-top:10px">
-        <div>
-          <label>Lat</label>
-          <input id="delLat" placeholder="-23.55" />
-        </div>
-        <div>
-          <label>Lng</label>
-          <input id="delLng" placeholder="-46.63" />
-        </div>
-      </div>
-
-      <div style="margin-top:10px">
-        <label>Atribuir para (UID motoboy)</label>
-        <input id="delDriverUid" placeholder="UID do motoboy" />
-      </div>
-
-      <div class="btnbar">
-        <button class="btn ok" id="btnSaveDelivery">Salvar/Atualizar</button>
-        <button class="btn" id="btnAssignDelivery">Enviar rota</button>
-        <button class="btn bad" id="btnMarkDelivered">Marcar entregue</button>
-      </div>
-
-      <div class="muted" id="deliveryMsg" style="margin-top:8px"></div>
-
-      <div class="sep"></div>
-      <div class="list" id="deliveriesList"></div>
-    </div>
-
-    <div class="footer" id="footer">Powered by thIAguinho Soluções Digitais</div>
-  </aside>
-
-  <main>
-    <div id="map"></div>
-  </main>
+  <div id="map"></div>
 </div>
 
 <script>
     const $ = id => document.getElementById(id);
 
-    // Guard anti-"tela muda": mostra erro na própria tela quando config/Firebase não carregam
+    // Guard anti-"tela muda": se algo do Firebase não carregar, mostra mensagem na tela.
     function showBootError(msg){
-      const box = $('loginBox');
       const m = $('loginMsg');
-      if (box) box.style.display = 'block';
-      if (m) {
-        m.style.color = '#ffb4b4';
+      if(m){
+        m.style.color = '#fca5a5';
         m.textContent = msg;
       } else {
         alert(msg);
@@ -214,14 +182,13 @@
       showBootError('ERRO: Configuração do Firebase não carregou. Verifique painel-web/assets/js/firebase-config.js no GitHub Pages.');
       throw new Error('firebaseConfig ausente');
     }
-
     if (typeof firebase === 'undefined') {
-      showBootError('ERRO: Biblioteca Firebase não carregou (rede pode estar bloqueando www.gstatic.com). Teste outra internet (4G) ou libere gstatic.');
+      showBootError('ERRO: Firebase não carregou (rede pode estar bloqueando www.gstatic.com). Teste outra internet (4G) ou libere gstatic.');
       throw new Error('firebase SDK ausente');
     }
 
     const cfg = window.PIZZARIA_CONFIG;
-    try { firebase.initializeApp(window.firebaseConfig); } catch(e) { /* ignore double init */ }
+    try { firebase.initializeApp(window.firebaseConfig); } catch (e) { /* ignore double init */ }
     const auth = firebase.auth();
     const db = firebase.database();
     const basePath = `deliveryApp/${cfg.empresaId}`;
@@ -231,15 +198,246 @@
     const deliveryMarkers = new Map();
     let state = { drivers:{}, deliveries:{}, roles:{} };
 
+    // UI topo
     $('titulo').textContent = cfg.nomePizzaria + ' • GPS';
     $('subtitulo').textContent = `Empresa ID: ${cfg.empresaId} • prazo normal ${cfg.promessaNormalMin} min`;
     $('footer').textContent = cfg.assinatura;
 
+    function setTag(id, kind){
+      const el = $(id);
+      el.classList.remove('ok','warn','danger');
+      if(kind) el.classList.add(kind);
+    }
+
+    function initMap(){
+      map = L.map('map').setView([cfg.baseLat, cfg.baseLng], cfg.baseZoom || 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:'© OpenStreetMap',
+        maxZoom: 19
+      }).addTo(map);
+
+      baseMarker = L.marker([cfg.baseLat, cfg.baseLng]).addTo(map).bindPopup(cfg.nomePizzaria);
+    }
+
+    function timeAgo(ms){
+      if(!ms) return '-';
+      const s=Math.floor((Date.now()-ms)/1000);
+      if(s<60) return `${s}s atrás`;
+      const m=Math.floor(s/60);
+      if(m<60) return `${m}min atrás`;
+      return `${Math.floor(m/60)}h atrás`;
+    }
+
+    function escapeHtml(v){
+      return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))
+    }
+
+    function upsertDriverMarker(uid, d){
+      const lat = d?.location?.lat;
+      const lng = d?.location?.lng;
+      if(typeof lat !== 'number' || typeof lng !== 'number') return;
+
+      let m = driverMarkers.get(uid);
+      const label = (d?.profile?.name || 'MOTOBOY') + (d?.profile?.plate?` • ${d.profile.plate}`:'');
+      const status = String(d?.status || 'offline');
+      const last = d?.location?.updatedAt || 0;
+
+      if(!m){
+        m = L.marker([lat, lng]).addTo(map);
+        m.on('click', () => map.setView([lat,lng], 16));
+        driverMarkers.set(uid, m);
+      }else{
+        m.setLatLng([lat,lng]);
+      }
+      m.bindPopup(`<b>${escapeHtml(label)}</b><br>Status: ${escapeHtml(status)}<br>Último: ${escapeHtml(timeAgo(last))}`);
+    }
+
+    function removeDriverMarker(uid){
+      const m = driverMarkers.get(uid);
+      if(m){
+        m.remove();
+        driverMarkers.delete(uid);
+      }
+    }
+
+    function upsertDeliveryMarker(id, d){
+      const lat = d?.lat;
+      const lng = d?.lng;
+      if(typeof lat !== 'number' || typeof lng !== 'number') return;
+
+      let m = deliveryMarkers.get(id);
+      const status = String(d?.status || 'aguardando');
+      const eta = d?.etaMin ? `${d.etaMin} min` : '-';
+      const address = d?.address || '';
+      const driverUid = d?.driverUid || '-';
+
+      if(!m){
+        m = L.circleMarker([lat, lng], { radius:8 }).addTo(map);
+        deliveryMarkers.set(id, m);
+      }else{
+        m.setLatLng([lat,lng]);
+      }
+      m.bindPopup(`<b>Pedido ${escapeHtml(id)}</b><br>Status: ${escapeHtml(status)}<br>Prazo: ${escapeHtml(eta)}<br>Motoboy: ${escapeHtml(driverUid)}<br>${escapeHtml(address)}`);
+    }
+
+    function removeDeliveryMarker(id){
+      const m = deliveryMarkers.get(id);
+      if(m){
+        m.remove();
+        deliveryMarkers.delete(id);
+      }
+    }
+
+    function renderDrivers(){
+      const box = $('driversList');
+      const drivers = state.drivers || {};
+      const uids = Object.keys(drivers);
+      $('driversCount').textContent = String(uids.length);
+      setTag('tagDrivers', uids.length ? 'ok' : 'warn');
+
+      if(!uids.length){
+        box.innerHTML = `<div class="small">Nenhum motoboy cadastrado em <b>${escapeHtml(cfg.empresaId)}</b>.</div>`;
+        return;
+      }
+
+      box.innerHTML = '';
+      uids.sort().forEach(uid => {
+        const d = drivers[uid] || {};
+        const name = d?.profile?.name || 'MOTOBOY';
+        const plate = d?.profile?.plate || '-';
+        const active = !!d?.profile?.active;
+        const status = String(d?.status || 'offline');
+        const last = d?.location?.updatedAt || 0;
+
+        const tag = active ? `<span class="tag ok">ativo</span>` : `<span class="tag danger">inativo</span>`;
+
+        const item = document.createElement('div');
+        item.className = 'item';
+        item.innerHTML = `
+          <div class="row" style="align-items:center">
+            <h3 style="margin:0">${escapeHtml(name)} • ${escapeHtml(plate)}</h3>
+            <div style="text-align:right">${tag}</div>
+          </div>
+          <div class="meta">
+            UID: <b>${escapeHtml(uid)}</b><br>
+            Status: <b>${escapeHtml(status)}</b><br>
+            Último GPS: <b>${escapeHtml(timeAgo(last))}</b>
+          </div>
+          <div class="row" style="margin-top:8px">
+            <button class="gray">Centralizar</button>
+          </div>
+        `;
+        item.querySelector('button').onclick = () => {
+          const lat = d?.location?.lat;
+          const lng = d?.location?.lng;
+          if(typeof lat === 'number' && typeof lng === 'number'){
+            map.setView([lat,lng], 16);
+          }
+        };
+        box.appendChild(item);
+
+        upsertDriverMarker(uid, d);
+      });
+
+      for (const uid of Array.from(driverMarkers.keys())){
+        if(!drivers[uid]) removeDriverMarker(uid);
+      }
+    }
+
+    function renderDeliveries(){
+      const box = $('deliveriesList');
+      const deliveries = state.deliveries || {};
+      const ids = Object.keys(deliveries);
+      $('deliveriesCount').textContent = String(ids.length);
+
+      if(!ids.length){
+        box.innerHTML = `<div class="small">Nenhuma entrega cadastrada.</div>`;
+        return;
+      }
+
+      box.innerHTML = '';
+      ids.sort().forEach(id => {
+        const d = deliveries[id] || {};
+        const status = String(d?.status || 'aguardando');
+        const eta = d?.etaMin ? `${d.etaMin} min` : '-';
+        const driverUid = d?.driverUid || '-';
+        const address = d?.address || '-';
+
+        let tag = `<span class="tag warn">${escapeHtml(status)}</span>`;
+        if(status === 'em_entrega') tag = `<span class="tag warn">em_entrega</span>`;
+        if(status === 'entregue') tag = `<span class="tag ok">entregue</span>`;
+
+        const item = document.createElement('div');
+        item.className = 'item';
+        item.innerHTML = `
+          <div class="row" style="align-items:center">
+            <h3 style="margin:0">Pedido ${escapeHtml(id)}</h3>
+            <div style="text-align:right">${tag}</div>
+          </div>
+          <div class="meta">
+            Prazo: <b>${escapeHtml(eta)}</b><br>
+            Motoboy: <b>${escapeHtml(driverUid)}</b><br>
+            Endereço: <b>${escapeHtml(address)}</b>
+          </div>
+          <div class="row" style="margin-top:8px">
+            <button class="gray">Carregar</button>
+          </div>
+        `;
+        item.querySelector('button').onclick = () => {
+          $('delId').value = id;
+          $('delEta').value = d?.etaMin || '';
+          $('delAddress').value = d?.address || '';
+          $('delLat').value = (typeof d?.lat === 'number') ? String(d.lat) : '';
+          $('delLng').value = (typeof d?.lng === 'number') ? String(d.lng) : '';
+          $('delDriverUid').value = d?.driverUid || '';
+          $('deliveryMsg').textContent = 'Carregado.';
+          const lat = d?.lat, lng = d?.lng;
+          if(typeof lat === 'number' && typeof lng === 'number'){
+            map.setView([lat,lng], 16);
+          }
+        };
+        box.appendChild(item);
+
+        upsertDeliveryMarker(id, d);
+      });
+
+      for (const id of Array.from(deliveryMarkers.keys())){
+        if(!deliveries[id]) removeDeliveryMarker(id);
+      }
+    }
+
+    function renderAll(){
+      renderDrivers();
+      renderDeliveries();
+    }
+
+    function startListeners(){
+      setTag('tagDB', 'warn');
+
+      db.ref(`${basePath}/drivers`).on('value', snap => {
+        state.drivers = snap.val() || {};
+        setTag('tagDB', 'ok');
+        renderDrivers();
+      });
+
+      db.ref(`${basePath}/deliveries`).on('value', snap => {
+        state.deliveries = snap.val() || {};
+        renderDeliveries();
+      });
+
+      db.ref(`${basePath}/roles`).on('value', snap => {
+        state.roles = snap.val() || {};
+      });
+    }
+
+    // Ações
     $('btnLogin').onclick = async () => {
+      $('loginMsg').style.color = '#9ca3af';
       $('loginMsg').textContent = 'Entrando...';
       try {
         await auth.signInWithEmailAndPassword($('loginEmail').value.trim(), $('loginPass').value);
       } catch(e) {
+        $('loginMsg').style.color = '#fca5a5';
         $('loginMsg').textContent = e?.message || String(e);
       }
     };
@@ -313,269 +511,44 @@
       }
     };
 
-    function setDot(id, kind){
-      const el = $(id);
-      el.classList.remove('ok','warn','bad');
-      if(kind) el.classList.add(kind);
-    }
-
-    function initMap(){
-      map = L.map('map').setView([cfg.baseLat, cfg.baseLng], cfg.baseZoom || 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution:'© OpenStreetMap',
-        maxZoom: 19
-      }).addTo(map);
-
-      baseMarker = L.marker([cfg.baseLat, cfg.baseLng]).addTo(map).bindPopup(cfg.nomePizzaria);
-    }
-
-    function upsertDriverMarker(uid, d){
-      const lat = d?.location?.lat;
-      const lng = d?.location?.lng;
-      if(typeof lat !== 'number' || typeof lng !== 'number') return;
-
-      let m = driverMarkers.get(uid);
-      const label = (d?.profile?.name || 'MOTOBOY') + (d?.profile?.plate?` • ${d.profile.plate}`:'');
-      const status = String(d?.status || 'offline');
-      const last = d?.location?.updatedAt || 0;
-
-      if(!m){
-        m = L.marker([lat, lng]).addTo(map);
-        m.on('click', () => map.setView([lat,lng], 16));
-        driverMarkers.set(uid, m);
-      }else{
-        m.setLatLng([lat,lng]);
-      }
-      m.bindPopup(`<b>${escapeHtml(label)}</b><br>Status: ${escapeHtml(status)}<br>Último: ${escapeHtml(timeAgo(last))}`);
-    }
-
-    function removeDriverMarker(uid){
-      const m = driverMarkers.get(uid);
-      if(m){
-        m.remove();
-        driverMarkers.delete(uid);
-      }
-    }
-
-    function upsertDeliveryMarker(id, d){
-      const lat = d?.lat;
-      const lng = d?.lng;
-      if(typeof lat !== 'number' || typeof lng !== 'number') return;
-
-      let m = deliveryMarkers.get(id);
-      const status = String(d?.status || 'aguardando');
-      const eta = d?.etaMin ? `${d.etaMin} min` : '-';
-      const address = d?.address || '';
-      const driverUid = d?.driverUid || '-';
-
-      if(!m){
-        m = L.circleMarker([lat, lng], { radius:8 }).addTo(map);
-        deliveryMarkers.set(id, m);
-      }else{
-        m.setLatLng([lat,lng]);
-      }
-      m.bindPopup(`<b>Pedido ${escapeHtml(id)}</b><br>Status: ${escapeHtml(status)}<br>Prazo: ${escapeHtml(eta)}<br>Motoboy: ${escapeHtml(driverUid)}<br>${escapeHtml(address)}`);
-    }
-
-    function removeDeliveryMarker(id){
-      const m = deliveryMarkers.get(id);
-      if(m){
-        m.remove();
-        deliveryMarkers.delete(id);
-      }
-    }
-
-    function renderDrivers(){
-      const box = $('driversList');
-      const drivers = state.drivers || {};
-      const uids = Object.keys(drivers);
-      $('driversCount').textContent = String(uids.length);
-      setDot('dotDrivers', uids.length ? 'ok' : 'warn');
-
-      if(!uids.length){
-        box.innerHTML = `<div class="muted">Nenhum motoboy cadastrado em <b>${escapeHtml(cfg.empresaId)}</b>.</div>`;
-        return;
-      }
-
-      box.innerHTML = '';
-      uids.sort().forEach(uid => {
-        const d = drivers[uid] || {};
-        const name = d?.profile?.name || 'MOTOBOY';
-        const plate = d?.profile?.plate || '-';
-        const active = !!d?.profile?.active;
-        const status = String(d?.status || 'offline');
-        const last = d?.location?.updatedAt || 0;
-
-        const pill = active ? `<span class="pill ok">ativo</span>` : `<span class="pill bad">inativo</span>`;
-        const item = document.createElement('div');
-        item.className = 'item';
-        item.innerHTML = `
-          <div class="split">
-            <h4>${escapeHtml(name)} • ${escapeHtml(plate)}</h4>
-            ${pill}
-          </div>
-          <div class="meta">
-            UID: <b>${escapeHtml(uid)}</b><br>
-            Status: <b>${escapeHtml(status)}</b><br>
-            Último GPS: <b>${escapeHtml(timeAgo(last))}</b>
-          </div>
-          <div class="btnbar">
-            <button class="btn" data-uid="${escapeHtml(uid)}">Centralizar</button>
-          </div>
-        `;
-        item.querySelector('button').onclick = () => {
-          const lat = d?.location?.lat;
-          const lng = d?.location?.lng;
-          if(typeof lat === 'number' && typeof lng === 'number'){
-            map.setView([lat,lng], 16);
-          }
-        };
-        box.appendChild(item);
-
-        upsertDriverMarker(uid, d);
-      });
-
-      // remove markers that no longer exist
-      for (const uid of Array.from(driverMarkers.keys())){
-        if(!drivers[uid]) removeDriverMarker(uid);
-      }
-    }
-
-    function renderDeliveries(){
-      const box = $('deliveriesList');
-      const deliveries = state.deliveries || {};
-      const ids = Object.keys(deliveries);
-      $('deliveriesCount').textContent = String(ids.length);
-      if(!ids.length){
-        box.innerHTML = `<div class="muted">Nenhuma entrega cadastrada.</div>`;
-        return;
-      }
-      box.innerHTML = '';
-      ids.sort().forEach(id => {
-        const d = deliveries[id] || {};
-        const status = String(d?.status || 'aguardando');
-        const eta = d?.etaMin ? `${d.etaMin} min` : '-';
-        const driverUid = d?.driverUid || '-';
-        const address = d?.address || '-';
-
-        let pill = `<span class="pill warn">${escapeHtml(status)}</span>`;
-        if(status === 'em_entrega') pill = `<span class="pill warn">em_entrega</span>`;
-        if(status === 'entregue') pill = `<span class="pill ok">entregue</span>`;
-
-        const item = document.createElement('div');
-        item.className = 'item';
-        item.innerHTML = `
-          <div class="split">
-            <h4>Pedido ${escapeHtml(id)}</h4>
-            ${pill}
-          </div>
-          <div class="meta">
-            Prazo: <b>${escapeHtml(eta)}</b><br>
-            Motoboy: <b>${escapeHtml(driverUid)}</b><br>
-            Endereço: <b>${escapeHtml(address)}</b>
-          </div>
-          <div class="btnbar">
-            <button class="btn" data-id="${escapeHtml(id)}">Carregar no formulário</button>
-          </div>
-        `;
-        item.querySelector('button').onclick = () => {
-          $('delId').value = id;
-          $('delEta').value = d?.etaMin || '';
-          $('delAddress').value = d?.address || '';
-          $('delLat').value = (typeof d?.lat === 'number') ? String(d.lat) : '';
-          $('delLng').value = (typeof d?.lng === 'number') ? String(d.lng) : '';
-          $('delDriverUid').value = d?.driverUid || '';
-          $('deliveryMsg').textContent = 'Carregado.';
-          const lat = d?.lat, lng = d?.lng;
-          if(typeof lat === 'number' && typeof lng === 'number'){
-            map.setView([lat,lng], 16);
-          }
-        };
-        box.appendChild(item);
-
-        upsertDeliveryMarker(id, d);
-      });
-
-      for (const id of Array.from(deliveryMarkers.keys())){
-        if(!deliveries[id]) removeDeliveryMarker(id);
-      }
-    }
-
-    function renderAll(){
-      renderDrivers();
-      renderDeliveries();
-    }
-
-    function startListeners(){
-      setDot('dotDB', 'warn');
-
-      db.ref(`${basePath}/drivers`).on('value', snap => {
-        state.drivers = snap.val() || {};
-        setDot('dotDB', 'ok');
-        renderDrivers();
-      });
-
-      db.ref(`${basePath}/deliveries`).on('value', snap => {
-        state.deliveries = snap.val() || {};
-        renderDeliveries();
-      });
-
-      db.ref(`${basePath}/roles`).on('value', snap => {
-        state.roles = snap.val() || {};
-      });
-    }
-
+    // Sessão / Permissão admin
     auth.onAuthStateChanged(async user => {
       if(user){
-        setDot('dotAuth','ok');
-        $('pillSession').className = 'pill ok';
-        $('pillSession').textContent = 'logado';
-        $('loginMsg').textContent = `Logado: ${user.email || user.uid}`;
+        setTag('tagAuth','ok');
+        $('loginBox').classList.add('hidden');
+        $('app').classList.remove('hidden');
+        $('sessionMsg').textContent = `Logado: ${user.email || user.uid}`;
 
-        // checa se é admin
         try{
           const roleSnap = await db.ref(`${basePath}/roles/${user.uid}`).get();
           const role = roleSnap.val();
           if(role !== 'admin'){
-            $('loginMsg').textContent = 'Este usuário não é admin nesta empresa.';
-            $('loginMsg').style.color = '#fca5a5';
+            $('sessionMsg').textContent = 'Este usuário não é admin nesta empresa.';
+            $('sessionMsg').style.color = '#fca5a5';
             return;
           }
-          $('loginMsg').style.color = '#9ca3af';
+          $('sessionMsg').style.color = '#9ca3af';
           startListeners();
         }catch(e){
-          $('loginMsg').textContent = e?.message || String(e);
+          $('sessionMsg').textContent = e?.message || String(e);
         }
       }else{
-        setDot('dotAuth','bad');
-        $('pillSession').className = 'pill warn';
-        $('pillSession').textContent = 'deslogado';
+        setTag('tagAuth','danger');
+        $('loginBox').classList.remove('hidden');
+        $('app').classList.add('hidden');
+        $('loginMsg').style.color = '#9ca3af';
         $('loginMsg').textContent = 'Faça login para ver os dados.';
-        // limpa listeners (simplificado)
       }
     });
 
-    // boot
+    // Boot
     try{
       initMap();
-      setDot('dotAuth','warn');
-      setDot('dotDB','warn');
-      setDot('dotDrivers','warn');
+      setTag('tagAuth','warn');
+      setTag('tagDB','warn');
+      setTag('tagDrivers','warn');
     }catch(e){
       showBootError('ERRO ao iniciar mapa/painel: ' + (e?.message || String(e)));
-    }
-
-    function timeAgo(ms){
-      if(!ms) return '-';
-      const s=Math.floor((Date.now()-ms)/1000);
-      if(s<60) return `${s}s atrás`;
-      const m=Math.floor(s/60);
-      if(m<60) return `${m}min atrás`;
-      return `${Math.floor(m/60)}h atrás`;
-    }
-
-    function escapeHtml(v){
-      return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))
     }
 </script>
 
