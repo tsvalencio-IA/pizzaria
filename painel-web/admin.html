@@ -21,7 +21,11 @@
     .map{height:620px;border-radius:18px;overflow:hidden;border:1px solid var(--line)}
     .list{display:grid;gap:10px}.item{background:var(--card2);border:1px solid var(--line);border-radius:15px;padding:12px}.item-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.name{font-weight:800}.small{font-size:12px;color:var(--muted);line-height:1.45}.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800}.b-ok{background:rgba(22,163,74,.18);color:#86efac}.b-warn{background:rgba(245,158,11,.18);color:#fcd34d}.b-danger{background:rgba(220,38,38,.18);color:#fca5a5}.b-blue{background:rgba(37,99,235,.18);color:#93c5fd}
     .login{max-width:460px;margin:38px auto}.hidden{display:none!important}.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}@media(max-width:800px){.kpi{grid-template-columns:repeat(2,1fr)}}.kpi .card{padding:12px}.kpi b{font-size:24px}.kpi span{display:block;color:var(--muted);font-size:12px;margin-top:3px}.footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}.alert{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.45);padding:10px;border-radius:14px;color:#fde68a;margin-bottom:10px}.dangerText{color:#fca5a5}.okText{color:#86efac}.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px}.section{display:grid;gap:14px}.mt{margin-top:12px}
-  </style>
+  
+      .collapse-btn{float:right;background:transparent;border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:10px;padding:6px 10px;font-weight:800;cursor:pointer}
+      .card.collapsed .card-body{display:none}
+      .card .card-body{margin-top:10px}
+    </style>
 </head>
 <body>
   <div id="loginBox" class="login card">
@@ -67,8 +71,9 @@
           <div id="driversList" class="list"></div>
         </div>
 
-        <div class="card">
-          <h2>Cadastrar/editar motoboy</h2>
+        <div class="card" id="cardDriver">
+          <h2>Cadastrar/editar motoboy <button class="collapse-btn" onclick="toggleCard('cardDriver')" type="button">Minimizar</button></h2>
+<div class="card-body">
           <div class="alert">Crie o usuário primeiro no Firebase Authentication. Depois cole aqui o UID dele.</div>
           <div class="section">
             <input id="driverUid" placeholder="UID do usuário no Firebase Auth" />
@@ -77,20 +82,24 @@
             <input id="driverPlate" placeholder="Placa da moto" />
             <button class="ok" id="btnSaveDriver">Salvar motoboy</button>
           </div>
+          </div>
         </div>
 
-        <div class="card">
-          <h2>Novo pedido/rota</h2>
+        <div class="card" id="cardDeliveryCreate">
+          <h2>Novo pedido/rota <button class="collapse-btn" onclick="toggleCard(\'cardDeliveryCreate\')" type="button">Minimizar</button></h2>
+<div class="card-body">
           <div class="grid">
             <input id="delCode" placeholder="Pedido nº" />
             <input id="delCustomer" placeholder="Cliente" />
           </div>
+          <input id="delPromiseMin" class="mt" placeholder="Prazo deste pedido (min) — ex: 30" />
           <textarea id="delAddress" class="mt" placeholder="Endereço de entrega"></textarea>
           <div class="grid mt">
             <input id="delLat" placeholder="Latitude opcional" />
             <input id="delLng" placeholder="Longitude opcional" />
           </div>
           <button class="ok mt" id="btnCreateDelivery">Criar pedido</button>
+        </div>
         </div>
 
         <div class="card">
@@ -193,17 +202,25 @@
         address: $('delAddress').value.trim(),
         status: 'aguardando',
         createdAt: Date.now(),
-        promisedNormalAt: Date.now() + cfg.promessaNormalMin * 60000,
+        promisedMin: (parseInt(($('delPromiseMin').value||'').trim(),10) || cfg.promessaNormalMin),
+        promisedAt: Date.now() + ((parseInt(($('delPromiseMin').value||'').trim(),10) || cfg.promessaNormalMin) * 60000)),
         promisedExtendedAt: Date.now() + cfg.promessaEstendidaMin * 60000
       };
       const lat = parseFloat(($('delLat').value || '').replace(',', '.'));
       const lng = parseFloat(($('delLng').value || '').replace(',', '.'));
       if(!Number.isNaN(lat) && !Number.isNaN(lng)){ payload.lat = lat; payload.lng = lng; }
       await db.ref(`${basePath}/deliveries`).push(payload);
-      $('delCode').value=''; $('delCustomer').value=''; $('delAddress').value=''; $('delLat').value=''; $('delLng').value='';
+      $('delCode').value=''; $('delCustomer').value=''; $('delAddress').value=''; $('delLat').value=''; $('delLng').value=''; $('delPromiseMin').value='';
     };
 
-    function renderAll(){
+    
+    function toggleCard(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.classList.toggle('collapsed');
+    }
+
+function renderAll(){
       renderDrivers();
       renderDeliveries();
       renderMap();
@@ -223,10 +240,6 @@
           <div class="item-top">
             <div><div class="name">${escapeHtml(p.name || uid)}</div><div class="small">${escapeHtml(p.vehiclePlate || '')} ${escapeHtml(p.phone || '')}</div></div>
             <span class="badge ${online?'b-ok':'b-danger'}">${online?'ONLINE':'OFFLINE'}</span>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-left:auto">
-              <button class="gray" style="padding:6px 10px;border-radius:10px;font-size:12px" onclick="editDriver('${uid}')">Editar</button>
-              <button class="danger" style="padding:6px 10px;border-radius:10px;font-size:12px" onclick="deleteDriver('${uid}')">Excluir</button>
-            </div>
           </div>
           <div class="small mt">
             Último GPS: ${loc.updatedAt ? timeAgo(loc.updatedAt) : 'nunca'}<br>
@@ -236,32 +249,6 @@
           </div>
         </div>`;
       }).join('');
-    }
-
-    // Editar/excluir motoboy
-    function editDriver(uid){
-      const d = (state.drivers||{})[uid] || {};
-      const p = d.profile || {};
-      $('driverUid').value = uid;
-      $('driverName').value = p.name || '';
-      $('driverPhone').value = p.phone || '';
-      $('driverPlate').value = p.vehiclePlate || '';
-      $('driverUid').scrollIntoView({behavior:'smooth', block:'center'});
-    }
-
-    async function deleteDriver(uid){
-      if(!uid) return;
-      const d = (state.drivers||{})[uid] || {};
-      const p = d.profile || {};
-      const label = (p.name ? p.name + ' ('+uid+')' : uid);
-      if(!confirm('Excluir motoboy '+label+'?\n\nIsso remove o cadastro do banco e bloqueia o envio de GPS deste UID.')) return;
-      try{
-        await db.ref(`${basePath}/drivers/${uid}`).remove();
-        alert('Motoboy excluído.');
-      }catch(e){
-        console.error(e);
-        alert('Falha ao excluir. Verifique se você está logado como admin.');
-      }
     }
 
     function renderDeliveries(){
