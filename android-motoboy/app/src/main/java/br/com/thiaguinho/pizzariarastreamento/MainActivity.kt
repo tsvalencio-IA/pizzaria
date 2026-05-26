@@ -105,6 +105,11 @@ class MainActivity : Activity() {
         stopButton.setOnClickListener { stopTracking() }
         root.addView(stopButton)
 
+        val deliveriesBtn = actionButton("MEUS PEDIDOS / ENTREGAS", Color.rgb(245, 158, 11))
+        deliveriesBtn.setOnClickListener { openDeliveries() }
+        root.addView(deliveriesBtn)
+
+
         val locationHelp = actionButton("Abrir localização do aparelho", Color.rgb(75, 85, 99))
         locationHelp.setOnClickListener { openLocationSettings() }
         root.addView(locationHelp)
@@ -306,7 +311,17 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun refreshStatus() {
+    
+    private fun openDeliveries() {
+        val session = storage.loadSession()
+        if (session == null) {
+            Toast.makeText(this, "Faça login antes de abrir suas entregas.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        startActivity(Intent(this, DeliveriesActivity::class.java))
+    }
+
+private fun refreshStatus() {
         val session = storage.loadSession()
         statusText.text = if (session != null) {
             "Login salvo. UID: ${session.uid}\nEmpresa: ${storage.getEmpresaId()}"
