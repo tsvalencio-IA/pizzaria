@@ -24,9 +24,28 @@ class FirebaseDeliveriesRepository {
 
             val baseUrl = cleanDatabaseUrl()
             val empresa = Uri.encode(empresaId)
-            val url = "$baseUrl/deliveryApp/$empresa/deliveries.json?auth=${Uri.encode(session.idToken)}"
+            val token = Uri.encode(session.idToken)
+val uidQuoted = Uri.encode("\"" + session.uid + "\"")
+val orderByDriverId = Uri.encode("\"driverId\"")
+val orderByDriverUid = Uri.encode("\"driverUid\"")
 
-            val json = Network.getJson(url) ?: return@withContext emptyList()
+// ✅ Consulta segura: pega somente entregas atribuídas ao motoboy (evita Permission Denied)
+val url1 = "$baseUrl/deliveryApp/$empresa/deliveries.json?orderBy=$orderByDriverId&equalTo=$uidQuoted&auth=$token"
+val url2 = "$baseUrl/deliveryApp/$empresa/deliveries.json?orderBy=$orderByDriverUid&equalTo=$uidQuoted&auth=$token"
+
+val json1 = Network.getJson(url1)
+val json2 = Network.getJson(url2)
+if ((json1 == null || json1.length() == 0) && (json2 == null || json2.length() == 0)) return@withContext emptyList()
+
+val merged = JSONObject()
+if (json1 != null) {
+  val k1 = json1.keys(); while (k1.hasNext()) { val k = k1.next(); merged.put(k, json1.get(k)) }
+}
+if (json2 != null) {
+  val k2 = json2.keys(); while (k2.hasNext()) { val k = k2.next(); if (!merged.has(k)) merged.put(k, json2.get(k)) }
+}
+
+val json = merged
             if (json.length() == 0) return@withContext emptyList()
 
             val out = ArrayList<DeliveryItem>()
