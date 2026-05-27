@@ -1,0 +1,54 @@
+{
+  "rules": {
+    "deliveryApp": {
+      "$empresaId": {
+        "roles": {
+          "$uid": {
+            ".read": "auth != null && root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin'",
+            ".write": "auth != null && root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin'",
+            ".validate": "newData.val() === 'admin'"
+          }
+        },
+        "drivers": {
+          "$driverUid": {
+            ".read": "auth != null && (root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin' || auth.uid === $driverUid)",
+            "profile": {
+              ".write": "auth != null && root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin'"
+            },
+            "location": {
+              ".write": "auth != null && auth.uid === $driverUid && root.child('deliveryApp').child($empresaId).child('drivers').child(auth.uid).child('profile').child('active').val() === true",
+              ".validate": "newData.hasChildren(['lat','lng','updatedAt']) && newData.child('lat').isNumber() && newData.child('lng').isNumber() && newData.child('updatedAt').isNumber()"
+            },
+            "status": {
+              ".write": "auth != null && auth.uid === $driverUid && root.child('deliveryApp').child($empresaId).child('drivers').child(auth.uid).child('profile').child('active').val() === true"
+            }
+          }
+        },
+        "deliveries": {
+          ".indexOn": [
+            "driverId",
+            "driverUid",
+            "status",
+            "createdAt"
+          ],
+          ".read": "auth != null && (root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin' || (root.child('deliveryApp').child($empresaId).child('drivers').child(auth.uid).child('profile').child('active').val() === true && (query.orderByChild === 'driverId' || query.orderByChild === 'driverUid') && query.equalTo === auth.uid))",
+          "$deliveryId": {
+            ".write": "auth != null && root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin'",
+            "status": {
+              ".write": "auth != null && (root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin' || data.parent().child('driverId').val() === auth.uid || data.parent().child('driverUid').val() === auth.uid)"
+            },
+            "relato": {
+              ".write": "auth != null && (root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin' || data.parent().child('driverId').val() === auth.uid || data.parent().child('driverUid').val() === auth.uid)"
+            },
+            "updatedAt": {
+              ".write": "auth != null && (root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin' || data.parent().child('driverId').val() === auth.uid || data.parent().child('driverUid').val() === auth.uid)"
+            },
+            "deliveredAt": {
+              ".write": "auth != null && (root.child('deliveryApp').child($empresaId).child('roles').child(auth.uid).val() === 'admin' || data.parent().child('driverId').val() === auth.uid || data.parent().child('driverUid').val() === auth.uid)"
+            }
+          }
+        }
+      }
+    }
+  }
+}
